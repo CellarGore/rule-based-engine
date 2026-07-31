@@ -1,0 +1,21 @@
+version: 1
+state: CA
+
+base_rates:
+  office: 0.35
+  retail_store: 0.61
+  restaurant: 0.82
+  auto_repair: 1.40
+  roofing_contractor: 2.75
+
+adjustments:
+  - name: Workers' compensation claims surcharge
+
+    when:
+      field: workers_comp_claims
+      operator: gt
+      value: 0
+
+    action:
+      type: multiplier
+      value: 1.03

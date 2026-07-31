@@ -10,3 +10,4 @@ class DecisionRequest(BaseModel):
 class DecisionResponse(BaseModel):
     status: str
     reason: Optional[str] = None
+    premium: Optional[float] = None

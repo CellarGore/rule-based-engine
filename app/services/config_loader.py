@@ -28,3 +28,7 @@ def load_questions(state: str) -> dict:
 
 def load_rules(state: str) -> dict:
     return _load_yaml(state, "rules.yaml", resource="rules")
+
+
+def load_rating(state: str) -> dict:
+    return _load_yaml(state, "rating.yaml", resource="rating")
