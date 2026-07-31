@@ -9,14 +9,14 @@ rules:
       value: roofing_contractor
     decision: decline
 
-  - name: Large payroll with significant claims history
+  - name: Large payroll and/or significant claims history
     when:
-      all:
+      any:
         - field: annual_payroll
           operator: gt
           value: 5000000
 
-        - field: workers_comp_claim_count
+        - field: workers_comp_claims
           operator: gt
           value: 3
     decision: refer
