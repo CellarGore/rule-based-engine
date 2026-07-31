@@ -1,0 +1,22 @@
+version: 1
+state: CA
+
+rules:
+  - name: Roofing contractors are ineligible
+    when:
+      field: business_type
+      operator: eq
+      value: roofing_contractor
+    decision: decline
+
+  - name: Large payroll with significant claims history
+    when:
+      all:
+        - field: annual_payroll
+          operator: gt
+          value: 5000000
+
+        - field: workers_comp_claim_count
+          operator: gt
+          value: 3
+    decision: refer

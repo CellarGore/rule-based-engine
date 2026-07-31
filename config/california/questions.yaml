@@ -1,0 +1,43 @@
+version: 1
+state: CA
+
+questions:
+  - id: business_type
+    label: What type of business?
+    type: enum
+    required: true
+    options:
+      - value: office
+        label: Office
+      - value: retail_store
+        label: Retail Store
+      - value: restaurant
+        label: Restaurant
+      - value: auto_repair
+        label: Auto Repair
+      - value: roofing_contractor
+        label: Roofing Contractor
+
+  - id: annual_payroll
+    label: What is your total annual payroll?
+    type: currency
+    required: true
+    currency: USD
+    minimum: 0
+
+  - id: employee_count
+    label: How many employees do you have?
+    type: integer
+    required: true
+    minimum: 1
+
+  - id: workers_comp_claims
+    label: How many workers' compensation claims have you had in the last 3 years?
+    type: integer
+    required: true
+    minimum: 0
+
+  - id: safety_program
+    label: Do you have a safety program in place?
+    type: boolean
+    required: true
