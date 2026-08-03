@@ -1,18 +1,17 @@
 # rule-based-engine
 
 A config-driven underwriting engine. Business rules, eligibility questions, and
-pricing logic are authored entirely in YAML — one directory per jurisdiction —
+pricing logic are authored entirely in YAML (one directory per jurisdiction)
 and served through a small FastAPI application. Adding a new state or changing
 a rule is a YAML edit, not a code change.
 
 The engine answers three questions for a given state, in order:
 
-1. **What do we need to ask?** — `GET /api/questions`
-2. **Given the answers, do we approve, decline, or refer?** — `POST /api/decision`
-3. **If approved, what's the premium?** — also `POST /api/decision`
+1. **What do we need to ask?** - `GET /api/questions`
+2. **Given the answers, do we approve, decline, or refer?** - `POST /api/decision`
+3. **If approved, what's the premium?** - also `POST /api/decision`
 
-Everything runs in memory. There is no database — config is read from disk on
-each request.
+Everything runs in memory and config is read from disk on each request.
 
 ## Requirements
 
@@ -39,7 +38,7 @@ pip install -r requirements.txt
 ```
 
 A virtual environment keeps this project's dependencies (FastAPI, Uvicorn,
-PyYAML — see `requirements.txt`) isolated from whatever else is installed on
+PyYAML - see `requirements.txt`) isolated from whatever else is installed on
 your machine. `pip install -r requirements.txt` reads that file and installs
 exactly those packages, pinned to what's listed there. If you add a new
 dependency, install it with `pip install <package>` and then update the file
@@ -47,7 +46,7 @@ with `pip freeze > requirements.txt` (or add the line by hand).
 
 You'll know the venv is active because your shell prompt is prefixed with
 `(venv)`. If you ever see `command not found: uvicorn` or `ModuleNotFoundError:
-No module named 'fastapi'`, it almost always means the venv isn't activated —
+No module named 'fastapi'`, it almost always means the venv isn't activated -
 re-run step 2, or invoke the binary directly with `venv/bin/uvicorn` /
 `venv/bin/pip`.
 
@@ -92,8 +91,8 @@ curl "http://127.0.0.1:8000/api/questions?state=california"
 
 ### `POST /api/decision?state={state}`
 
-Takes the client's answers, evaluates `rules.yaml` for that state, and — if
-the outcome is `approve` — calculates a premium from `rating.yaml`.
+Takes the client's answers, evaluates `rules.yaml` for that state, and - if
+the outcome is `approve` - calculates a premium from `rating.yaml`.
 
 ```bash
 curl -X POST "http://127.0.0.1:8000/api/decision?state=california" \
@@ -129,9 +128,9 @@ populated when `status` is `approve`; otherwise it's `null`.
 Each state gets its own directory under `config/`, e.g. `config/california/`,
 containing three files:
 
-**`questions.yaml`** — the question set returned as-is by `GET /api/questions`.
+**`questions.yaml`** - the question set returned as-is by `GET /api/questions`.
 
-**`rules.yaml`** — an ordered list of eligibility rules:
+**`rules.yaml`** - an ordered list of eligibility rules:
 
 ```yaml
 rules:
@@ -150,7 +149,7 @@ as needed. Supported operators: `eq`, `ne`, `gt`, `gte`, `lt`, `lte`, `in`,
 the most severe decision wins (`decline` > `refer` > `approve`), and the
 `reason` returned is the `name` of the first rule that reached that severity.
 
-**`rating.yaml`** — a base rate per `business_type`, plus optional
+**`rating.yaml`** - a base rate per `business_type`, plus optional
 adjustments:
 
 ```yaml
@@ -173,7 +172,7 @@ then each matching adjustment's action is applied in order (currently only
 `multiplier` is supported), rounded to 2 decimal places.
 
 Adding a new state is purely additive: create `config/<state>/` with the same
-three files and it's immediately servable — no code changes required.
+three files and it's immediately servable - no code changes required.
 
 ## Architecture
 
@@ -181,7 +180,7 @@ three files and it's immediately servable — no code changes required.
 app/
   main.py               FastAPI app instance, router registration
   schemas.py             Pydantic request/response models
-  routers/                Thin HTTP controllers — validate input, call a
+  routers/                Thin HTTP controllers - validate input, call a
                           service, translate results/errors to responses
     questions.py
     decision.py
@@ -193,12 +192,12 @@ app/
     rating_engine.py        Applies rating.yaml -> premium
 ```
 
-Routers own no business logic — they parse the request, delegate to a
+Routers own no business logic - they parse the request, delegate to a
 service, and map service-level exceptions to HTTP status codes. Everything
 under `services/` is plain Python and testable without spinning up FastAPI.
 
 ## Project status
 
-No automated test suite yet — endpoints have been verified manually via
+No automated test suite yet - endpoints have been verified manually via
 `curl` and the `/docs` UI. `texas` exists as an empty config directory,
 reserved for a second state.
